@@ -1,4 +1,5 @@
-import express from "express";
+const express = require('express')
+const routes = require('./routes')
 
 const app = express();
 
@@ -6,12 +7,10 @@ app.use(express.json());
 
 const port = 3000;
 
-app.get("/", (req, res) => {
-  res.send({ message: "ok" });
-});
+routes(app)
 
 app.listen(port, () => {
   console.log(`servidor rodando na porta: ${port}`);
 });
 
-export default app;
+module.exports = app
