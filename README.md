@@ -1,0 +1,1 @@
+npx sequelize-cli model:create --name Niveis --attrinutes descr_nivel:string
