@@ -5,7 +5,9 @@ const router = Router();
 
 router.get("/pessoas", PessoaController.pegaTodasAsPessoas);
 router.get("/pessoas/:id", PessoaController.pegaUmaPessoa);
+router.get("/pessoas/:pessoaId/matriculas/:matriculaId", PessoaController.pegaMatricula);
 router.post("/pessoas", PessoaController.criaPessoa);
+router.post("/pessoas/:id/matriculas", PessoaController.criaMatricula);
 router.put("/pessoas/:id", PessoaController.atualizarPessoa);
 router.delete("/pessoas/:id", PessoaController.deletar);
 

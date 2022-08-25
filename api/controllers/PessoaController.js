@@ -22,6 +22,32 @@ class PessoaController {
     }
   }
 
+  static async pegaMatricula(req, res) {
+    const { pessoaId, matriculaId } = req.params;
+    try {
+      const matricula = await database.Matriculas.findOne({
+        where: {
+          id: Number(matriculaId),
+          estudante_id: Number(pessoaId),
+        },
+      });
+      return res.status(200).json(matricula);
+    } catch (error) {
+      return res.status(500).json(err.message);
+    }
+  }
+
+  static async criaMatricula(req, res) {
+    const { id } = req.params;
+    const novaMatricula = { ...req.body, estudante_id: Number(id) };
+    try {
+      const matricula = await database.Matriculas.create(novaMatricula);
+      return res.status(201).json(matricula);
+    } catch (error) {
+      return res.status(500).json(err.message);
+    }
+  }
+
   static async criaPessoa(req, res) {
     const pessoa = req.body;
     try {
