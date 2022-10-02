@@ -1,3 +1,4 @@
+const Sequelize = require('sequelize');
 const database = require('../models/index');
 
 class PessoaController {
@@ -51,6 +52,55 @@ class PessoaController {
         },
       });
       return res.status(200).json(matricula);
+    } catch (error) {
+      return res.status(500).json(error.message);
+    }
+  }
+
+  static async pegaMatriculas(req, res) {
+    const { estudanteId } = req.params;
+    try {
+      const pessoa = await database.Pessoas.findOne({
+        where: {
+          id: Number(estudanteId),
+        },
+      });
+      const matriculas = await pessoa.getAulasMatriculadas();
+      return res.status(200).json(matriculas);
+    } catch (error) {
+      return res.status(500).json(error.message);
+    }
+  }
+
+  static async pegaMatriculasPorTurma(req, res) {
+    const { turmaId } = req.params;
+    try {
+      const todasAsMatriculas = database.Matriculas.findAndCountAll({
+        where: {
+          turma_id: Number(turmaId),
+          status: 'confirmado',
+        },
+      });
+      return res.status(200).json(todasAsMatriculas);
+    } catch (error) {
+      return res.status(500).json(error.message);
+    }
+  }
+
+  static async pegaTurmasLotadas(req, res) {
+    const lotacaoTurma = 2;
+    try {
+      const turmasLotadas = await database.Matriculas.findAndCountAll({
+        where: {
+          status: 'confirmado',
+        },
+        attributes: [
+          'turma_id',
+        ],
+        group: ['turma_id'],
+        having: Sequelize.literal(`count(turma_id) >= ${lotacaoTurma}`),
+      });
+      return res.status(200).json(turmasLotadas.count);
     } catch (error) {
       return res.status(500).json(error.message);
     }

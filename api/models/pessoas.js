@@ -8,12 +8,21 @@ module.exports = (sequelize, DataTypes) => {
       });
       Pessoas.hasMany(models.Matriculas, {
         foreignKey: 'estudante_id',
+        scope: { status: 'confirmado' },
+        as: 'aulasMatriculadas',
       });
     }
   }
   Pessoas.init(
     {
-      nome: DataTypes.STRING,
+      nome: {
+        type: DataTypes.STRING,
+        validate: {
+          funcaoValidadora(dado) {
+            if (dado.length < 2) throw new Error('Nome deve ter mais de 1 caracter');
+          },
+        },
+      },
       ativo: DataTypes.BOOLEAN,
       email: {
         type: DataTypes.STRING,

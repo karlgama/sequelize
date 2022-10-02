@@ -1,16 +1,16 @@
-"use strict";
-const { Model } = require("sequelize");
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Turmas extends Model {
     static associate(models) {
       Turmas.hasMany(models.Matriculas, {
-        foreignKey: "turma_id",
+        foreignKey: 'turma_id',
       });
       Turmas.belongsTo(models.Pessoas, {
-        foreignKey: "docente_id",
+        foreignKey: 'docente_id',
       });
       Turmas.belongsTo(models.Niveis, {
-        foreignKey: "nivel_id",
+        foreignKey: 'nivel_id',
       });
     }
   }
@@ -20,9 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Turmas",
+      modelName: 'Turmas',
       paranoid: true,
-    }
+    },
   );
   return Turmas;
 };
