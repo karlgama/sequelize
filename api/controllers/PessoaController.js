@@ -1,3 +1,4 @@
+const { Transaction } = require('sequelize');
 const Sequelize = require('sequelize');
 const database = require('../models/index');
 
@@ -165,6 +166,31 @@ class PessoaController {
         where: { id: Number(matriculaId), estudanteId: Number(estudanteId) },
       });
       return res.status(200).json(matriculaAtualizada);
+    } catch (error) {
+      return res.status(500).json(error.message);
+    }
+  }
+
+  static async cancelaPessoa(req, res) {
+    const { estudanteId } = req.params;
+    try {
+      database.sequelize.transaction(async (transaction) => {
+        await database.Pessoa.update({ ativa: false }, {
+          where: {
+            id: Number(estudanteId),
+          },
+        }, {
+          transaction,
+        });
+        await database.Matriculas.update({ status: 'cancelado' }, {
+          where: {
+            estudante_id: Number(estudanteId),
+          },
+        }, {
+          transaction,
+        });
+      });
+      return res.status(200).json({ message: `Matriculas referente a estudante com di ${estudanteId} canceladas` });
     } catch (error) {
       return res.status(500).json(error.message);
     }
